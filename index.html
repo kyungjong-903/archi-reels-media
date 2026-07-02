@@ -109,7 +109,7 @@ async function loadReels(){
   list.forEach(r=>{
     const c=document.createElement("div"); c.className="card";
     c.innerHTML=`
-      <video src="${r.video}" controls preload="metadata" playsinline></video>
+      <video src="${r.video}" controls preload="none" poster="posters/${r.id}.jpg" playsinline></video>
       <div class="body">
         <div class="title">${r.title||"릴스"}</div>
         <div class="meta">${r.product||""} ${r.date?("· "+r.date):""}</div>
