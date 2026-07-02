@@ -113,6 +113,10 @@ async function loadReels(){
       <div class="body">
         <div class="title">${r.title||"릴스"}</div>
         <div class="meta">${r.product||""} ${r.date?("· "+r.date):""}</div>
+        <div class="links" style="font-size:12px;margin:6px 0;line-height:1.8;word-break:break-all;background:#faf7f2;padding:8px 10px;border-radius:8px">
+          🔗 쿠팡 파트너스: ${r.coupang?`<a href="${r.coupang}" target="_blank" rel="noopener">${r.coupang}</a>`:"<b style='color:#c00'>미생성</b>"}<br>
+          🏷️ 인포크: ${r.inpock?`<a href="${r.inpock}" target="_blank" rel="noopener">${r.inpock}</a>`:""} 에서 <b>&lt;${r.inpocknum||"?"}&gt;</b> 검색
+        </div>
         <div class="cap">${(r.caption||"").replace(/</g,"&lt;")}</div>
         <div class="row">
           <button class="btn copy">캡션 복사</button>
