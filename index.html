@@ -66,12 +66,9 @@
 <script>
 const PIN_HASH = "4649a2421f81e43d6d2505d80b3185f81e475d315ad74c5776fb85e2e87236f3"; // SHA-256(PIN)
 const AUTH_KEY = "archi_board_auth_v1";
-const DONE_KEY = "archi_board_done_v1"; // 업로드 완료 표시(로컬)
 
 async function sha256(s){ const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""); }
 function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1600); }
-function getDone(){ try{return JSON.parse(localStorage.getItem(DONE_KEY)||"[]");}catch(e){return[];} }
-function setDone(a){ localStorage.setItem(DONE_KEY,JSON.stringify(a)); }
 
 // ---- PIN 게이트 ----
 let pin="";
@@ -102,10 +99,9 @@ function enter(){ document.getElementById("gate").style.display="none"; document
 async function loadReels(){
   let data=[];
   try{ data=await (await fetch("manifest.json?"+Date.now())).json(); }catch(e){ }
-  const done=getDone();
-  const list=data.filter(r=>!done.includes(r.id));
+  const list=data;
   const grid=document.getElementById("grid");
-  document.getElementById("cnt").textContent = list.length+"개 대기중 · 총 "+data.length+"개";
+  document.getElementById("cnt").textContent = list.length+"개 업로드 대기중";
   grid.innerHTML="";
   if(!list.length){ grid.innerHTML='<div class="empty">업로드할 릴스가 없습니다 🤍<br>새 릴스가 추가되면 여기에 나타납니다.</div>'; return; }
   list.forEach(r=>{
@@ -124,15 +120,8 @@ async function loadReels(){
           <button class="btn copy">캡션 복사</button>
           <a class="btn dl" href="${r.video}" download>영상 다운로드</a>
         </div>
-        <button class="btn done">업로드 완료 → 삭제</button>
       </div>`;
     c.querySelector(".copy").onclick=()=>{ navigator.clipboard.writeText(r.caption||"").then(()=>toast("캡션 복사됨")); };
-    c.querySelector(".done").onclick=()=>{
-      if(!confirm("업로드 완료로 표시하고 목록에서 삭제할까요?")) return;
-      const d=getDone(); d.push(r.id); setDone(d);
-      c.style.transition=".3s"; c.style.opacity="0"; c.style.transform="scale(.96)";
-      setTimeout(loadReels,320); toast("완료 처리됨");
-    };
     grid.appendChild(c);
   });
 }
