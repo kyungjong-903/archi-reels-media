@@ -118,7 +118,7 @@ async function loadReels(){
         <div class="cap">${(r.caption||"").replace(/</g,"&lt;")}</div>
         <div class="row">
           <button class="btn copy">캡션 복사</button>
-          <a class="btn dl" href="${r.video}" download>영상 다운로드</a>
+          <a class="btn dl" href="${r.video}" download>영상 다운로드</a>${r.cover?`<a class="btn dl" href="${r.cover}" download style="background:#5a8f5a">커버</a>`:""}
         </div>
       </div>`;
     c.querySelector(".copy").onclick=()=>{ navigator.clipboard.writeText(r.caption||"").then(()=>toast("캡션 복사됨")); };
